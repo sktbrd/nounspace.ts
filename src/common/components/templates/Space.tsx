@@ -11,6 +11,7 @@ import { LayoutFidgets } from "@/fidgets";
 import { UserTheme } from "@/common/lib/theme";
 import CustomHTMLBackground from "@/common/components/molecules/CustomHTMLBackground";
 import { isNil, isUndefined } from "lodash";
+import InfoBanner from "./InfoBanner";
 
 export type SpaceFidgetConfig = {
   instanceConfig: FidgetConfig<FidgetSettings>;
@@ -110,6 +111,7 @@ export default function Space({
           {!isUndefined(profile) ? (
             <div className="z-50 bg-white h-40">{profile}</div>
           ) : null}
+          <InfoBanner userFarcasterName={profile} />
           <LayoutFidget
             layoutConfig={{
               ...config.layoutDetails.layoutConfig,
