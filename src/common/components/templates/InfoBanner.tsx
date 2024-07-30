@@ -1,39 +1,52 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { FaInfoCircle, FaTimes } from "react-icons/fa";
+import { FaTimes } from "react-icons/fa";
 
-export default function InfoBanner({ userFarcasterName }) {
-  const [isDisplayed, setIsDisplayed] = useState(true);
+export default function InfoBanner() {
+  const [isDisplayed, setIsDisplayed] = useState(false);
   const [message, setMessage] = useState("");
   const router = useRouter();
   const { pathname, query } = router;
-  const slug = query.slug;
+  const userFarcasterName = query.handle;
 
   useEffect(() => {
-    // Check localStorage for banner display state
-    const storedState = localStorage.getItem("bannerDisplayed");
-    if (storedState === "false") {
-      setIsDisplayed(true);
-    }
+    let storedState: string | null;
 
-    // Set message based on the route and userFarcasterName
     if (pathname === "/homebase") {
-      setMessage(
-        "Your homebase is a space that only you can see. Click the paintbrush to customize it 🚀",
-      );
-    } else if (pathname === `/s/${slug}` && slug === userFarcasterName) {
-      setMessage(
-        "This is your profile. Click the paintbrush to customize your space.",
-      );
+      storedState = localStorage.getItem("homebaseBannerDisplayed");
+      if (!storedState) {
+        setIsDisplayed(true);
+        setMessage(
+          "Your homebase is a space that only you can see. Click the paintbrush to customize it 🚀",
+        );
+      } else {
+        setIsDisplayed(false);
+      }
+    } else if (
+      pathname.startsWith("/s/") &&
+      userFarcasterName === "farcaster"
+    ) {
+      storedState = localStorage.getItem("profileBannerDisplayed");
+      if (!storedState) {
+        setIsDisplayed(true);
+        setMessage(
+          "This is your profile. Click the paintbrush to customize your space.",
+        );
+      } else {
+        setIsDisplayed(false);
+      }
     } else {
       setIsDisplayed(false);
     }
-  }, [pathname, slug, userFarcasterName]);
+  }, [pathname, userFarcasterName]);
 
   const closeBanner = () => {
     setIsDisplayed(false);
-    localStorage.setItem("bannerDisplayed", "false");
-    console.log(localStorage.getItem("bannerDisplayed"));
+    if (pathname === "/homebase") {
+      localStorage.setItem("homebaseBannerDisplayed", "false");
+    } else if (pathname.startsWith("/s/")) {
+      localStorage.setItem("profileBannerDisplayed", "false");
+    }
   };
 
   if (!isDisplayed) return null;
@@ -42,8 +55,11 @@ export default function InfoBanner({ userFarcasterName }) {
     <div className="flex justify-center p-4 bg-blue-100 border border-blue-300 rounded-md m-1">
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center">
-          <FaInfoCircle className="text-blue-600 mr-2" />
-          <span className="text-blue-600 font-medium">Important Note!</span>
+          <img
+            src="https://i.ibb.co/L8Fb37T/image.png"
+            alt="rocket"
+            className="w-8 h-8 object-contain"
+          />
         </div>
         <p className="text-blue-600 ml-2">{message}</p>
         <button onClick={closeBanner} className="bg-transparent">

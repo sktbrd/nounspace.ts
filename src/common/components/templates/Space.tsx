@@ -108,7 +108,7 @@ export default function Space({
         }
       >
         <div className="h-full flex flex-col">
-          <InfoBanner userFarcasterName={profile} />
+          <InfoBanner />
           {!isUndefined(profile) ? (
             <div className="z-50 bg-white h-40">{profile}</div>
           ) : null}
