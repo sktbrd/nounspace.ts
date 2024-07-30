@@ -13,7 +13,7 @@ export default function InfoBanner({ userFarcasterName }) {
     // Check localStorage for banner display state
     const storedState = localStorage.getItem("bannerDisplayed");
     if (storedState === "false") {
-      setIsDisplayed(false);
+      setIsDisplayed(true);
     }
 
     // Set message based on the route and userFarcasterName
@@ -32,7 +32,8 @@ export default function InfoBanner({ userFarcasterName }) {
 
   const closeBanner = () => {
     setIsDisplayed(false);
-    localStorage.setItem("bannerDisplayed", "false"); // Update localStorage
+    localStorage.setItem("bannerDisplayed", "false");
+    console.log(localStorage.getItem("bannerDisplayed"));
   };
 
   if (!isDisplayed) return null;

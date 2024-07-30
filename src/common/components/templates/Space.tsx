@@ -108,10 +108,10 @@ export default function Space({
         }
       >
         <div className="h-full flex flex-col">
+          <InfoBanner userFarcasterName={profile} />
           {!isUndefined(profile) ? (
             <div className="z-50 bg-white h-40">{profile}</div>
           ) : null}
-          <InfoBanner userFarcasterName={profile} />
           <LayoutFidget
             layoutConfig={{
               ...config.layoutDetails.layoutConfig,
