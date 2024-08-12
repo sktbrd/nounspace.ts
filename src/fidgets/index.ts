@@ -10,6 +10,7 @@ import NounishGovernance from "./community/nouns-dao/NounishGovernance";
 import Cast from "./farcaster/Cast";
 import Feed from "./farcaster/Feed";
 import CreateCast from "./farcaster/CreateCast";
+import Lifi from "./lifi/lifi";
 
 export const CompleteFidgets = {
   //
@@ -29,6 +30,7 @@ export const CompleteFidgets = {
   // Nouns
   governance: NounishGovernance,
   // zora: zoraEmbed,
+  lifi: Lifi,
 };
 
 export const LayoutFidgets = {
