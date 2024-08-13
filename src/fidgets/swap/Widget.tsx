@@ -1,6 +1,6 @@
 "use client";
-
-import type { WidgetConfig } from "@lifi/widget";
+import React from "react";
+import type { WidgetConfig, WidgetTheme } from "@lifi/widget";
 import { LiFiWidget, WidgetSkeleton } from "@lifi/widget";
 import { ClientOnly } from "./ClientOnly";
 
@@ -10,17 +10,30 @@ export function Widget({
   components,
   fontColor,
   secondaryColor,
+  themes,
+  sellToken,
+  buyToken,
+  fromChain,
+  toChain,
 }: {
   background: string;
   fontFamily: string;
   components: string;
   fontColor: string;
   secondaryColor: string;
+  themes: WidgetTheme | string;
+  sellToken: string;
+  buyToken: string;
+  fromChain: number;
+  toChain: number;
 }) {
-  const config = {
-    fromChain: 8453,
-    fromAmount: 420,
-    fromToken: "0x0a93a7BE7e7e426fC046e204C44d6b03A302b631",
+  const custom_config = {
+    hiddenUI: ["poweredBy"],
+    fromChain: fromChain || 8453,
+    toChain: toChain || 8453,
+    fromAmount: 0.069,
+    fromToken: sellToken || "",
+    toToken: buyToken || "0x0a93a7BE7e7e426fC046e204C44d6b03A302b631",
     theme: {
       typography: {
         fontFamily: fontFamily,
@@ -33,7 +46,6 @@ export function Widget({
       },
       palette: {
         primary: { main: components },
-        secondary: { main: "#F5B5FF" },
         background: {
           default: background,
           paper: background,
@@ -79,7 +91,6 @@ export function Widget({
             },
           },
         },
-
         MuiTypography: {
           styleOverrides: {
             root: {
@@ -91,10 +102,23 @@ export function Widget({
     },
   } as Partial<WidgetConfig>;
 
+  const selected_config =
+    themes === "Custom"
+      ? custom_config
+      : ({
+          hiddenUI: ["poweredBy"],
+          fromChain: fromChain || 8453,
+          toChain: toChain || 8453,
+          fromAmount: 0.069,
+          fromToken: sellToken || "",
+          toToken: buyToken || "0x0a93a7BE7e7e426fC046e204C44d6b03A302b631",
+          theme: themes || {},
+        } as Partial<WidgetConfig>);
+
   return (
     <div>
-      <ClientOnly fallback={<WidgetSkeleton config={config} />}>
-        <LiFiWidget config={config} integrator="nounspace" />
+      <ClientOnly fallback={<WidgetSkeleton config={selected_config} />}>
+        <LiFiWidget config={selected_config} integrator="nounspace" />
       </ClientOnly>
     </div>
   );

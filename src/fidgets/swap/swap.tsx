@@ -1,5 +1,4 @@
-"use client";
-import React, { useEffect } from "react";
+import React from "react";
 import TextInput from "@/common/components/molecules/TextInput";
 import {
   FidgetArgs,
@@ -7,11 +6,14 @@ import {
   FidgetModule,
   type FidgetSettingsStyle,
 } from "@/common/fidgets";
-import { defaultStyleFields } from "@/fidgets/helpers";
 import { Widget } from "./Widget";
-import { max } from "lodash";
-import ColorSelector from "@/common/components/molecules/ColorSelector";
+import SimpleColorSelector from "@/common/components/molecules/SimpleColorSelector";
 import FontSelector from "@/common/components/molecules/FontSelector";
+import ThemeSelector from "@/common/components/molecules/ThemeSelector";
+import { WidgetTheme } from "@lifi/widget";
+import { resolveCssVariable } from "./utils/cssUtils";
+import ChainSelector from "@/common/components/molecules/ChainSelector";
+
 export type LifiFidgetSettings = {
   text: string;
   background: string;
@@ -21,31 +23,64 @@ export type LifiFidgetSettings = {
   secondaryColor: string;
   headerColor: string;
   message: string;
+  themes?: WidgetTheme;
+  defaultSellToken: string;
+  defaultBuyToken: string;
+  fromChain: number;
+  toChain: number;
 } & FidgetSettingsStyle;
 
 const lifiProperties: FidgetProperties = {
-  fidgetName: "lifi",
+  fidgetName: "swap",
   icon: 0x1f501,
   fields: [
     {
-      fieldName: "message",
+      fieldName: "defaultSellToken",
       default: "",
       required: true,
       inputSelector: TextInput,
       group: "settings",
     },
     {
+      fieldName: "defaultBuyToken",
+      default: "0x0a93a7BE7e7e426fC046e204C44d6b03A302b631",
+      required: true,
+      inputSelector: TextInput,
+      group: "settings",
+    },
+    {
+      fieldName: "fromChain",
+      default: 8453,
+      required: false,
+      inputSelector: ChainSelector,
+      group: "settings",
+    },
+    {
+      fieldName: "toChain",
+      default: 8453,
+      required: false,
+      inputSelector: ChainSelector,
+      group: "settings",
+    },
+    {
+      fieldName: "themes",
+      default: "Custom",
+      required: false,
+      inputSelector: ThemeSelector,
+      group: "style",
+    },
+    {
       fieldName: "background",
       default: "",
       required: false,
-      inputSelector: ColorSelector,
+      inputSelector: SimpleColorSelector,
       group: "style",
     },
     {
       fieldName: "components",
       default: "",
       required: false,
-      inputSelector: ColorSelector,
+      inputSelector: SimpleColorSelector,
       group: "style",
     },
     {
@@ -59,33 +94,26 @@ const lifiProperties: FidgetProperties = {
       fieldName: "fontColor",
       default: "",
       required: false,
-      inputSelector: ColorSelector,
+      inputSelector: SimpleColorSelector,
       group: "style",
     },
     {
       fieldName: "secondaryColor",
       default: "",
       required: false,
-      inputSelector: ColorSelector,
+      inputSelector: SimpleColorSelector,
       group: "style",
     },
   ],
   size: {
-    minHeight: 4,
+    minHeight: 6,
     maxHeight: 36,
-    minWidth: 6,
+    minWidth: 3,
     maxWidth: 36,
   },
 };
 
-function resolveCssVariable(variable) {
-  return (
-    getComputedStyle(document.documentElement).getPropertyValue(variable) ||
-    "#000000"
-  ); // Default to black if unresolved
-}
-
-const Lifi: React.FC<FidgetArgs<LifiFidgetSettings>> = ({ settings }) => {
+const Swap: React.FC<FidgetArgs<LifiFidgetSettings>> = ({ settings }) => {
   const background = settings.background?.startsWith("var")
     ? resolveCssVariable(settings.background)
     : settings.background || resolveCssVariable("");
@@ -95,11 +123,14 @@ const Lifi: React.FC<FidgetArgs<LifiFidgetSettings>> = ({ settings }) => {
     : settings.components || resolveCssVariable("");
 
   const fontFamily = settings.fontFamily || "Londrina Solid";
+
   const fontColor =
     settings.fontColor || resolveCssVariable("--user-theme-font-color");
+
   const secondaryColor =
     settings.secondaryColor ||
     resolveCssVariable("--user-theme-secondary-color");
+
   return (
     <div>
       <Widget
@@ -108,6 +139,11 @@ const Lifi: React.FC<FidgetArgs<LifiFidgetSettings>> = ({ settings }) => {
         components={components}
         fontColor={fontColor}
         secondaryColor={secondaryColor}
+        themes={settings.themes || {}}
+        sellToken={settings.defaultSellToken}
+        buyToken={settings.defaultBuyToken}
+        fromChain={settings.fromChain || 8453}
+        toChain={settings.toChain | 8453}
       />
       <p style={{ marginLeft: "20px" }}>{settings.message}</p>
     </div>
@@ -115,6 +151,6 @@ const Lifi: React.FC<FidgetArgs<LifiFidgetSettings>> = ({ settings }) => {
 };
 
 export default {
-  fidget: Lifi,
+  fidget: Swap,
   properties: lifiProperties,
 } as FidgetModule<FidgetArgs<LifiFidgetSettings>>;
