@@ -10,6 +10,8 @@ import NounishGovernance from "./community/nouns-dao/NounishGovernance";
 import Cast from "./farcaster/Cast";
 import Feed from "./farcaster/Feed";
 import CreateCast from "./farcaster/CreateCast";
+import zoraEmbed from "./zora/zoraEmbed";
+import snapShot from "./snapshot/SnapShot";
 import Swap from "./swap/swap";
 
 export const CompleteFidgets = {
@@ -29,7 +31,8 @@ export const CompleteFidgets = {
   iframe: IFrame,
   // Nouns
   governance: NounishGovernance,
-  // zora: zoraEmbed,
+  // zora: zoraEmbed, -> 500 server error -Frame ancestors block
+  SnapShot: snapShot,
   swap: Swap,
 };
 
