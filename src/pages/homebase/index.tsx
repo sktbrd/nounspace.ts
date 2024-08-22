@@ -50,17 +50,14 @@ const Homebase: NextPageWithLayout = () => {
       : {
           config: homebaseConfig,
           saveConfig,
-          commitConfig,
+          // To get types to match since store.commitConfig is debounced
+          commitConfig: async () => await commitConfig(),
           resetConfig,
         };
 
-  return <SpacePage {...args} />;
-};
+  // Add feed to the args
 
-Homebase.getLayout = function getLayout(page: React.ReactElement) {
-  return (
-    <div className="min-h-screen max-w-screen h-screen w-screen">{page}</div>
-  );
+  return <SpacePage {...args} />;
 };
 
 export default Homebase;

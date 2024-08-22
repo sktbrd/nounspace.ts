@@ -18,6 +18,12 @@ import GrabHandleIcon from "../components/atoms/icons/GrabHandle";
 import StashIcon from "../components/atoms/icons/Stash";
 import { FaX } from "react-icons/fa6";
 import BackArrowIcon from "../components/atoms/icons/BackArrow";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../components/atoms/tooltip";
 
 export type FidgetWrapperProps = {
   fidget: React.FC<FidgetArgs>;
@@ -88,7 +94,10 @@ export function FidgetWrapper({
 
   const [doubleCheck, setDoubleCheck] = useState(false);
 
-  const onSave = async (newSettings: FidgetSettings) => {
+  const onSave = async (
+    newSettings: FidgetSettings,
+    shouldUnselect?: boolean,
+  ) => {
     try {
       await saveConfig({
         ...bundle.config,
@@ -98,7 +107,9 @@ export function FidgetWrapper({
       toast.error("Failed to save fidget settings", { duration: 1000 });
     }
 
-    unselect();
+    if (shouldUnselect) {
+      unselect();
+    }
   };
 
   function unselect() {
@@ -120,7 +131,16 @@ export function FidgetWrapper({
         }
       >
         <Card className="h-full grabbable rounded-lg w-6 flex items-center justify-center bg-[#F3F4F6] hover:bg-sky-100 text-[#1C64F2]">
-          <GrabHandleIcon />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center gap-1">
+                  <GrabHandleIcon />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>Drag to Move</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </Card>
         <button
           onClick={() => {
@@ -128,7 +148,16 @@ export function FidgetWrapper({
           }}
         >
           <Card className="h-full rounded-lg ml-1 w-6 flex items-center justify-center bg-[#F3F4F6] hover:bg-sky-100 text-[#1C64F2]">
-            <StashIcon />
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="flex items-center gap-1">
+                    <StashIcon />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>Stash in Fidget Tray</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </Card>
         </button>
         {!doubleCheck ? (
@@ -138,7 +167,14 @@ export function FidgetWrapper({
             }}
           >
             <Card className="h-full rounded-lg ml-1 w-6 flex items-center justify-center bg-[#F3F4F6] hover:bg-red-100 text-[#1C64F2]">
-              <FaX className="w-5/12" />
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <FaX className="w-5/12" />
+                  </TooltipTrigger>
+                  <TooltipContent>Remove Fidget</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </Card>
           </button>
         ) : (
@@ -149,7 +185,16 @@ export function FidgetWrapper({
               }}
             >
               <Card className="h-full rounded-lg ml-1 w-6 flex items-center justify-center bg-[#F3F4F6] hover:bg-sky-100 text-[#1C64F2]">
-                <BackArrowIcon />
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-1">
+                        <BackArrowIcon />
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>Cancel</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </Card>
             </button>
             <button
@@ -158,7 +203,14 @@ export function FidgetWrapper({
               }}
             >
               <Card className="h-full rounded-lg ml-1 w-6 flex items-center justify-center bg-[#F3F4F6] hover:bg-red-100 text-[#1C64F2]">
-                <FaX className="w-5/12" />
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <FaX className="w-5/12" />
+                    </TooltipTrigger>
+                    <TooltipContent>Confirm Delete</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </Card>
             </button>
           </>

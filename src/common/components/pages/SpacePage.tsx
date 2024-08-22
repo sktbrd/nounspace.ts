@@ -1,8 +1,8 @@
-import React, { ReactNode, useRef, useState } from "react";
-import Sidebar from "../organisms/Sidebar";
+import React, { ReactNode } from "react";
 import Space, { SpaceConfig, SpaceConfigSaveDetails } from "../templates/Space";
 import { isUndefined } from "lodash";
-import SpaceLoading from "../templates/SpaceLoading";
+import SpaceLoading from "@/common/components/templates/SpaceLoading";
+import { useSidebarContext } from "@/common/components/organisms/Sidebar";
 
 type SpacePageArgs = {
   config?: SpaceConfig;
@@ -10,6 +10,7 @@ type SpacePageArgs = {
   commitConfig?: () => Promise<void>;
   resetConfig?: () => Promise<void>;
   profile?: ReactNode;
+  feed?: ReactNode;
   loading?: boolean;
 };
 
@@ -20,29 +21,13 @@ export default function SpacePage({
   resetConfig,
   profile,
   loading,
+  feed,
 }: SpacePageArgs) {
-  const [editMode, setEditMode] = useState(false);
-  const [sidebarEditable, setSidebarEditable] = useState(false);
-  const portalRef = useRef<HTMLDivElement>(null);
-
-  function enterEditMode() {
-    setEditMode(true);
-  }
+  const { editMode, setEditMode, setSidebarEditable, portalRef } =
+    useSidebarContext();
 
   return (
-    <div
-      className="flex w-full h-full"
-      style={{ background: "var(--user-theme-background)" }}
-    >
-      <div className="flex mx-auto transition-all duration-100 ease-out z-10">
-        <Sidebar
-          editMode={editMode}
-          enterEditMode={enterEditMode}
-          isEditable={sidebarEditable}
-          portalRef={portalRef}
-          theme={config?.theme}
-        />
-      </div>
+    <>
       {isUndefined(config) ||
       isUndefined(saveConfig) ||
       isUndefined(commitConfig) ||
@@ -56,12 +41,13 @@ export default function SpacePage({
           commitConfig={commitConfig}
           resetConfig={resetConfig}
           profile={profile}
+          feed={feed}
           setEditMode={setEditMode}
           editMode={editMode}
           setSidebarEditable={setSidebarEditable}
           portalRef={portalRef}
         />
       )}
-    </div>
+    </>
   );
 }
